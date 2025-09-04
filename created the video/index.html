@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌌 الموقع الأسطوري لتوليد الوسائط</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a40);
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px rgba(255,204,0,0.8);
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    input, select {
+      width: 60%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      margin-bottom:15px;
+      font-size:1rem;
+      outline:none;
+    }
+    button {
+      padding:12px 25px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(45deg, #ff0066, #ffcc00);
+      color:white;
+      cursor:pointer;
+      font-size:18px;
+      font-weight:bold;
+      box-shadow:0 0 12px rgba(255,0,102,0.7);
+      transition:0.3s;
+      margin:10px;
+    }
+    button:hover {
+      transform:scale(1.05);
+      box-shadow:0 0 18px rgba(255,204,0,0.9);
+    }
+    #result {
+      margin-top:30px;
+      font-size:1.5rem;
+      font-weight:bold;
+      color:#00ffcc;
+      text-shadow: 0 0 10px rgba(0,255,204,0.7);
+      min-height:60px;
+    }
+    .blink { animation:blink 1s infinite; }
+    @keyframes blink { 50% {opacity:0.4;} }
+    .loader {
+      border:6px solid #f3f3f3;
+      border-top:6px solid #00ffcc;
+      border-radius:50%;
+      width:40px;
+      height:40px;
+      animation:spin 1s linear infinite;
+      margin:15px auto;
+    }
+    @keyframes spin { 0% {transform:rotate(0deg);} 100% {transform:rotate(360deg);} }
+    footer {
+      margin-top:50px;
+      font-size:0.9rem;
+      color:#aaa;
+    }
+    #coins {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      background: #222;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: gold;
+      box-shadow: 0 0 10px rgba(255,215,0,0.7);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #addCoin {
+      background: #28a745;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,255,0,0.7);
+    }
+    #addCoin:hover { background: #218838; }
+    #preview {
+      margin-top:20px;
+      max-width: 80%;
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      display: none; /* مخفي افتراضياً */
+    }
+  </style>
+</head>
+<body>
+  <h1>🌟 الموقع الأسطوري لتوليد الوسائط 🌟</h1>
+  <p>اكتب وصفك الخيالي وسنقوم بإنشاء صور أو فيديوهات أسطورية 🤯</p>
+
+  <div id="coins">
+    💰 Coins: <span id="coinCount">100</span>
+    <button id="addCoin" onclick="openStore()">+</button>
+  </div>
+
+  <div id="app">
+    <input type="text" id="prompt" placeholder="✨ اكتب وصف المحتوى هنا ✨">
+    <br>
+    <select id="size">
+      <option value="512x512">512 × 512</option>
+      <option value="768x768">768 × 768</option>
+      <option value="1024x1024">1024 × 1024</option>
+    </select>
+    <br>
+    <button onclick="generateImage()">🖼️ أنشئ صورة أسطورية (-15💰)</button>
+    <button onclick="generateVideo()">🎬 أنشئ فيديو أسطوري (-25💰)</button>
+
+    <div id="result"></div>
+    <img id="preview" src="" alt="Preview">
+  </div>
+
+  <footer>
+    🌌 جميع الحقوق محفوظة © 2025
+  </footer>
+
+  <script>
+    let coins = 100;
+
+    function updateCoins(amount) {
+      coins -= amount;
+      if (coins < 0) coins = 0;
+      document.getElementById("coinCount").textContent = coins;
+    }
+
+    function openStore() {
+      window.open("store.html", "_blank"); // فتح صفحة المتجر
+    }
+
+    function typeWriterEffect(text, elementId, speed = 80) {
+      let i = 0;
+      const element = document.getElementById(elementId);
+      element.innerHTML = "";
+      function typing() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+
+    function generateImage() {
+      const prompt = document.getElementById("prompt").value;
+      const size = document.getElementById("size").value;
+      const resultDiv = document.getElementById("result");
+      const previewImg = document.getElementById("preview");
+
+      if (!prompt) {
+        resultDiv.innerHTML = "❌ يرجى كتابة وصف أولاً!";
+        return;
+      }
+
+      if (coins < 15) {
+        resultDiv.innerHTML = "❌ ليس لديك عملات كافية لإنشاء صورة!";
+        return;
+      }
+
+      updateCoins(15);
+      previewImg.style.display = "none";
+      resultDiv.innerHTML = '<div class="loader"></div><div id="loadingText" class="blink"></div>';
+      typeWriterEffect(`⏳ جاري إنشاء صورة بالحجم ${size} ... ✨`, "loadingText", 80);
+
+      // محاكاة إنشاء الصورة
+      setTimeout(() => {
+        resultDiv.innerHTML = "✅ تم إنشاء الصورة بنجاح!";
+        previewImg.src = "https://via.placeholder.com/512?text=Your+Image"; // رابط مؤقت للمعاينة
+        previewImg.style.display = "block";
+      }, 3000);
+    }
+
+    function generateVideo() {
+      const prompt = document.getElementById("prompt").value;
+      const resultDiv = document.getElementById("result");
+      const previewImg = document.getElementById("preview");
+
+      if (!prompt) {
+        resultDiv.innerHTML = "❌ يرجى كتابة وصف أولاً!";
+        return;
+      }
+
+      if (coins < 25) {
+        resultDiv.innerHTML = "❌ ليس لديك عملات كافية لإنشاء فيديو!";
+        return;
+      }
+
+      updateCoins(25);
+      previewImg.style.display = "none";
+      resultDiv.innerHTML = '<div class="loader"></div><div id="loadingText" class="blink"></div>';
+      typeWriterEffect(`⏳ جاري إنشاء فيديو أسطوري من وصفك ... 🎬`, "loadingText", 80);
+
+      // محاكاة إنشاء الفيديو
+      setTimeout(() => {
+        resultDiv.innerHTML = "✅ تم إنشاء الفيديو بنجاح!";
+        previewImg.src = "https://via.placeholder.com/512?text=Your+Video"; // رابط مؤقت للمعاينة
+        previewImg.style.display = "block";
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
